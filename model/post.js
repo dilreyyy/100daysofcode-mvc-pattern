@@ -17,6 +17,20 @@ class Post {
     //     this.id = id;
     // }
 
+    static async fetchAll(){
+        return await db.getDb().collection('posts').find().toArray();
+    }
+
+    async fetch(){
+        if(!this.id){
+            return;
+        }
+
+        const postDocument = await db.getDb().collection('posts').findOne({ _id: this.id });
+        this.title = postDocument.title;
+        this.content = postDocument.content;
+    }
+
     async save(){
         let result;
         if(this.id){
@@ -40,6 +54,8 @@ class Post {
         return await db.getDb().collection('posts').deleteOne({ _id: this.id });
     }
 
+    
+    
 
 }
 
