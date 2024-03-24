@@ -5,6 +5,7 @@ const db = require('../data/database');
 
 const ObjectId = mongodb.ObjectId;
 const router = express.Router();
+const Post = require('../model/post');
 
 router.get('/', function (req, res) {
   res.render('welcome', { csrfToken: req.csrfToken() });
@@ -57,12 +58,14 @@ router.post('/posts', async function (req, res) {
     return; // or return res.redirect('/admin'); => Has the same effect
   }
 
-  const newPost = {
-    title: enteredTitle,
-    content: enteredContent,
-  };
+  // const newPost = {
+  //   title: enteredTitle,
+  //   content: enteredContent,
+  // };
 
-  await db.getDb().collection('posts').insertOne(newPost);
+  const newPost = new Post(enteredTitle, enteredContent);
+  await newPost.save();
+  // await db.getDb().collection('posts').insertOne(newPost);
 
   res.redirect('/admin');
 });
