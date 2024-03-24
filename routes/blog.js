@@ -63,8 +63,8 @@ router.post('/posts', async function (req, res) {
   //   content: enteredContent,
   // };
 
-  const newPost = new Post(enteredTitle, enteredContent);
-  await newPost.save();
+  const post = new Post(enteredTitle, enteredContent);
+  await post.save();
   // await db.getDb().collection('posts').insertOne(newPost);
 
   res.redirect('/admin');
@@ -100,7 +100,6 @@ router.get('/posts/:id/edit', async function (req, res) {
 router.post('/posts/:id/edit', async function (req, res) {
   const enteredTitle = req.body.title;
   const enteredContent = req.body.content;
-  const postId = new ObjectId(req.params.id);
 
   if (
     !enteredTitle ||
@@ -119,20 +118,25 @@ router.post('/posts/:id/edit', async function (req, res) {
     return; 
   }
 
-  await db
-    .getDb()
-    .collection('posts')
-    .updateOne(
-      { _id: postId },
-      { $set: { title: enteredTitle, content: enteredContent } }
-    );
+  // await db
+  //   .getDb()
+  //   .collection('posts')
+  //   .updateOne(
+  //     { _id: postId },
+  //     { $set: { title: enteredTitle, content: enteredContent } }
+  //   );
+  const post = new Post(enteredTitle, enteredContent, req.params.id);
+  await post.save();
 
   res.redirect('/admin');
 });
 
 router.post('/posts/:id/delete', async function (req, res) {
-  const postId = new ObjectId(req.params.id);
-  await db.getDb().collection('posts').deleteOne({ _id: postId });
+  // const postId = new ObjectId(req.params.id);
+  // await db.getDb().collection('posts').deleteOne({ _id: postId });
+
+  const post = new Post('', '', req.params.id);
+  await post.delete();
 
   res.redirect('/admin');
 });
